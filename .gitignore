@@ -2,6 +2,7 @@ sessions
 logs/
 .env.env.local
 .env
+core/mapping.json
 *venv*/
 __pycache__/
 *.pyc
