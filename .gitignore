@@ -1,0 +1,13 @@
+sessions
+logs/
+.env.env.local
+.env
+*venv*/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+.DS_Store
+.vscode/
+.idea/

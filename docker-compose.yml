@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: monocanal-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - monocanal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: monocanal-app
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - CANAL_OFERTAS_ID=${CANAL_OFERTAS_ID}
+    volumes:
+      - ./sessions:/app/sessions
+      - ./logs:/app/logs
+    networks:
+      - monocanal
+    restart: unless-stopped
+
+networks:
+  monocanal:
+    driver: bridge
+
+volumes:
+  redis_data:
